@@ -20,6 +20,7 @@
 - 这节课对自己有什么帮助？
 
 - 里面的哪些知识点是可以直接用到工作中的？
+![react](./react.drawio.svg)
 
 - 放上你写的代码链接(让你动手)
   https://github.com/janet-cat/mini-react
