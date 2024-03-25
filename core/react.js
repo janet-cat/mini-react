@@ -20,14 +20,18 @@ function createElement(type, props, ...children) {
   };
 }
 
+let root = null;
 let nextUnitOfWork = null;
 function render(el, container) {
+  // el：React VDom ; container：根节点
   nextUnitOfWork = {
     dom: container,
     props: {
       children: [el],
     },
   };
+
+  root = nextUnitOfWork;
 }
 
 function createDOM(type) {
@@ -69,8 +73,6 @@ function performUnitOfWork(fiber) {
   if (!fiber.dom) {
     const dom = (nextUnitOfWork.dom = createDOM(fiber.type));
 
-    fiber.parent.dom.append(dom);
-
     updateProps(dom, fiber.props);
   }
 
@@ -82,10 +84,27 @@ function performUnitOfWork(fiber) {
   return fiber.parent.sibling;
 }
 
+function commitRoot() {
+  commitWork(root.child);
+}
+
+function commitWork(fiber) {
+  if (!fiber) return;
+
+  fiber.parent.dom.append(fiber.dom);
+  commitWork(fiber.child);
+  commitWork(fiber.sibling);
+}
+
 function workLoop(deadline) {
   if (deadline.timeRemaining() > 1 && nextUnitOfWork) {
     // 同步获取到下一个节点
     nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+  }
+
+  if (!nextUnitOfWork && root) {
+    commitRoot();
+    root = null;
   }
 
   requestIdleCallback(workLoop);
