@@ -32,3 +32,35 @@
 
 - 放上你写的代码链接(让你动手)
   https://github.com/janet-cat/mini-react
+
+## 执行过程
+1. 实现`ReactDOM.createRoot(container).render(App)`这个渲染函数，container挂载容器，重点是App是一个React Element，即使用object描述的虚拟dom，数据结构为：
+```js
+const el = {
+   type: "div",
+   props: {
+      id: "app",
+      children: []
+   }
+}
+
+// 解析方法，将vdom渲染成真是dom
+function render(el, container) {
+   const dom = document.createELement(el.type)
+   
+   // 处理props，添加给dom
+   Object.keys(el.props).forEach((key) => {
+     if (key !== "children") {
+       dom[key] = el.props[key]
+     }
+   })
+
+   // 处理children
+   el.props.children.forEach(child => {
+      render(child, dom)
+   })
+
+   // 将生成的dom挂载到container上
+   container.append(dom)
+}
+```

@@ -17,10 +17,12 @@
    3. 这个请求线程空闲时间的回调目的是高效利用单线程完成任务，而尽量不去阻塞高优先级的浏览器计算和渲染任务，那什么是高优先级的任务？浏览器怎么定义？
 2. requestIdleCallback 兼容问题怎么解？
 
+- 流程图
+  ![react](./drawio/react-dom.drawio.svg)
+
 - 这节课对自己有什么帮助？
 
 - 里面的哪些知识点是可以直接用到工作中的？
-![react](./react.drawio.svg)
 
 - 放上你写的代码链接(让你动手)
   https://github.com/janet-cat/mini-react
