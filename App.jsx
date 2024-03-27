@@ -1,14 +1,21 @@
 import React from "./core/react.js";
 
 function Counter({ num }) {
-  return <span>counter: {num}</span>;
+  const onClick = () => {
+    console.log("clicked");
+  };
+
+  return (
+    <div>
+      <div>counter: {num}</div>
+      <button onClick={onClick}>click me</button>
+    </div>
+  );
 }
 
 const App = (
   <div>
-    <span>23232</span>
     <Counter num={11}></Counter>
-    <Counter num={12}></Counter>
   </div>
 );
 

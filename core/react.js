@@ -43,6 +43,11 @@ function createDOM(type) {
 
 function updateProps(dom, props) {
   Object.keys(props).forEach((key) => {
+    if (key.startsWith("on")) {
+      const event = key.toLowerCase().substring(2);
+      dom.addEventListener(event, props[key]);
+    }
+
     if (key !== "children") {
       dom[key] = props[key];
     }
@@ -84,6 +89,26 @@ function updateHostComponent(fiber) {
   initChildren(fiber, children);
 }
 
+function commitWork(fiber) {
+  if (!fiber) return;
+
+  let fiberParent = fiber.parent;
+  while (!fiberParent.dom) {
+    fiberParent = fiberParent.parent;
+  }
+
+  if (fiber.dom) {
+    fiberParent.dom.append(fiber.dom);
+  }
+
+  commitWork(fiber.child);
+  commitWork(fiber.sibling);
+}
+
+function commitRoot() {
+  commitWork(root.child);
+}
+
 function performUnitOfWork(fiber) {
   const isFunctionComponent = typeof fiber.type === "function";
   if (isFunctionComponent) {
@@ -102,26 +127,6 @@ function performUnitOfWork(fiber) {
     }
     nextFiber = nextFiber.parent;
   }
-}
-
-function commitRoot() {
-  commitWork(root.child);
-}
-
-function commitWork(fiber) {
-  if (!fiber) return;
-
-  let fiberParent = fiber.parent;
-  while (!fiberParent.dom) {
-    fiberParent = fiberParent.parent;
-  }
-
-  if (fiber.dom) {
-    fiberParent.dom.append(fiber.dom);
-  }
-
-  commitWork(fiber.child);
-  commitWork(fiber.sibling);
 }
 
 function workLoop(deadline) {
